@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'client',
+    'activite',
+    'comptable',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +78,7 @@ WSGI_APPLICATION = 'fiscale_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fiscale_db',
+        'NAME': 'myfisc',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
