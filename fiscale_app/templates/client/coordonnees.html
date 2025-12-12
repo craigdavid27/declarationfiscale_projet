@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Coordonnées</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profil.css' %}">
+</head>
+<body>
+    <main class="profil-main">
+        <div class="container">
+            <!-- En-tête retour + titre -->
+            <div class="profil-header">
+                <a href="{% url 'clients:mon_espace' idclient=client.idclient %}" class="profil-back-link">← Retour</a>
+                <div class="profil-title-block">
+                    <h1 class="profil-title">Mon Profil</h1>
+                    <p class="profil-subtitle">Gérez vos informations personnelles</p>
+                </div>
+            </div>
+
+            <!-- Onglets de navigation du profil -->
+            <div class="profil-tabs">
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">👤</span>
+                    <span>Informations</span>
+                </button>
+                <button class="profil-tab active">
+                    <span class="profil-tab-icon">📍</span>
+                    <span>Coordonnées</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">🔐</span>
+                    <span>Connexion</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">👨‍👩‍👧</span>
+                    <span>Personnes à charge</span>
+                </button>
+            </div>
+
+            <!-- Carte Coordonnées -->
+            <section class="profil-card">
+                <header class="profil-card-header">
+                    <div class="profil-card-icon">📍</div>
+                    <div>
+                        <h2 class="profil-card-title">Coordonnées</h2>
+                        <p class="profil-card-description">Votre adresse postale et email de contact</p>
+                    </div>
+                </header>
+
+                <form class="profil-form" method="post">
+                    {% csrf_token %}
+
+                    <!-- Adresse -->
+                    <div class="profil-form-group">
+                        <label>Adresse</label>
+                        <div class="profil-form-grid">
+                            <div class="profil-form-group">
+                                <label for="rue">Rue</label>
+                                <input type="text" id="rue" name="rue" value="{{ client.adresse.rue }}" placeholder="Avenue Louise">
+                            </div>
+                            <div class="profil-form-group">
+                                <label for="numero">Numéro</label>
+                                <input type="text" id="numero" name="numero" value="{{ client.adresse.numero }}" placeholder="234">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code postal + Ville -->
+                    <div class="profil-form-grid">
+                        <div class="profil-form-group">
+                            <label for="code_postal">Code postal</label>
+                            <input type="text" id="code_postal" name="code_postal" value="{{ client.adresse.ville.code_postal }}" placeholder="1050">
+                        </div>
+                        <div class="profil-form-group">
+                            <label for="ville">Ville</label>
+                            <input type="text" id="ville" name="ville" value="{{ client.adresse.ville.nom }}" placeholder="Bruxelles">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="profil-form-group">
+                        <label for="email">Courriel (Email)</label>
+                        <input type="email" id="email" name="email" value="{{ client.email }}" placeholder="marie.dubois@email.com">
+                    </div>
+
+                    <div class="profil-actions">
+                        <button type="submit" class="profil-submit-btn">
+                            Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="{% static 'js/particulier.js' %}"></script>
+</body>
+</html>

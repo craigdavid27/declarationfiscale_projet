@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Personnes à charge</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profil.css' %}">
+</head>
+<body>
+    <main class="profil-main">
+        <div class="container">
+            <!-- En-tête retour + titre -->
+            <div class="profil-header">
+                <a href="{% url 'clients:mon_espace' idclient=client.idclient %}" class="profil-back-link">← Retour</a>
+                <div class="profil-title-block">
+                    <h1 class="profil-title">Mon Profil</h1>
+                    <p class="profil-subtitle">Gérez vos informations personnelles</p>
+                </div>
+            </div>
+
+            <!-- Onglets de navigation du profil -->
+            <div class="profil-tabs">
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">👤</span>
+                    <span>Informations</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">📍</span>
+                    <span>Coordonnées</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">🔐</span>
+                    <span>Connexion</span>
+                </button>
+                <button class="profil-tab active">
+                    <span class="profil-tab-icon">👨‍👩‍👧</span>
+                    <span>Personnes à charge</span>
+                </button>
+            </div>
+
+            <!-- Carte personnes à charge -->
+            <section class="profil-card">
+                <header class="profil-card-header">
+                    <div class="profil-card-icon">👨‍👩‍👧</div>
+                    <div>
+                        <h2 class="profil-card-title">Personnes à charge</h2>
+                        <p class="profil-card-description">Gérez les informations de vos personnes à charge</p>
+                    </div>
+                    <button type="button" class="profil-add-btn">
+                        <span class="profil-add-btn-icon">＋</span>
+                        <span>Ajouter</span>
+                    </button>
+                </header>
+
+                <form class="profil-form" method="post">
+                    {% csrf_token %}
+
+                    <!-- Personne à charge 1 -->
+                    <div class="profil-dependent-section">
+                        <div class="profil-dependent-header">
+                            <h3 class="profil-dependent-title">Personne à charge 1</h3>
+                        </div>
+
+                        <div class="profil-form-grid">
+                            <div class="profil-form-group">
+                                <label for="prenom_1">Prénom</label>
+                                <input type="text" id="prenom_1" name="prenom_1" placeholder="Sophie">
+                            </div>
+                            <div class="profil-form-group">
+                                <label for="nom_1">Nom</label>
+                                <input type="text" id="nom_1" name="nom_1" placeholder="Dubois">
+                            </div>
+                        </div>
+
+                        <div class="profil-form-grid">
+                            <div class="profil-form-group">
+                                <label for="registre_national_1">Registre national</label>
+                                <input type="text" id="registre_national_1" name="registre_national_1" placeholder="10.03.12-234.56">
+                            </div>
+                            <div class="profil-form-group">
+                                <label for="lien_parent_1">Lien de parenté</label>
+                                <input type="text" id="lien_parent_1" name="lien_parent_1" placeholder="Enfant">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personne à charge 2 -->
+                    <div class="profil-dependent-section">
+                        <div class="profil-dependent-header">
+                            <h3 class="profil-dependent-title">Personne à charge 2</h3>
+                        </div>
+
+                        <div class="profil-form-grid">
+                            <div class="profil-form-group">
+                                <label for="prenom_2">Prénom</label>
+                                <input type="text" id="prenom_2" name="prenom_2" placeholder="Lucas">
+                            </div>
+                            <div class="profil-form-group">
+                                <label for="nom_2">Nom</label>
+                                <input type="text" id="nom_2" name="nom_2" placeholder="Dubois">
+                            </div>
+                        </div>
+
+                        <div class="profil-form-grid">
+                            <div class="profil-form-group">
+                                <label for="registre_national_2">Registre national</label>
+                                <input type="text" id="registre_national_2" name="registre_national_2" placeholder="15.07.09-245.67">
+                            </div>
+                            <div class="profil-form-group">
+                                <label for="lien_parent_2">Lien de parenté</label>
+                                <input type="text" id="lien_parent_2" name="lien_parent_2" placeholder="Enfant">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profil-actions">
+                        <button type="submit" class="profil-submit-btn">Enregistrer</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="{% static 'js/particulier.js' %}"></script>
+</body>
+</html>

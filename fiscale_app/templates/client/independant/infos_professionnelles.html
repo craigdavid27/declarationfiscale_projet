@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activité Professionnelle - Informations professionnelles</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profil.css' %}">
+
+    <style>
+        /* Mise en page générale proche de la maquette Figma */
+        body {
+            background-color: #F9FAFB;
+        }
+
+        .pro-activity-main {
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .pro-activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .pro-activity-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4B5563;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .pro-activity-back:hover {
+            color: #111827;
+        }
+
+        .pro-activity-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .pro-activity-save-btn {
+            background-color: #16A34A;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 999px;
+            padding: 0.6rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
+        }
+
+        .pro-activity-save-btn:hover {
+            background-color: #15803D;
+        }
+
+        /* Onglets horizontaux */
+        .pro-activity-tabs {
+            display: flex;
+            gap: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 1.5rem;
+        }
+
+        .pro-activity-tab {
+            padding: 0.9rem 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #6B7280;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .pro-activity-tab.active {
+            color: #111827;
+        }
+
+        .pro-activity-tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 3px;
+            border-radius: 999px 999px 0 0;
+            background: #16A34A;
+        }
+
+        /* Carte formulaire principale */
+        .pro-activity-card {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            padding: 1.75rem 1.75rem 2rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            border: 1px solid #E5E7EB;
+        }
+
+        .pro-activity-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .pro-activity-card-subtitle {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .pro-activity-form-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.25rem;
+        }
+
+        .pro-activity-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .pro-activity-form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .pro-activity-input,
+        .pro-activity-select,
+        .pro-activity-textarea {
+            border-radius: 0.75rem;
+            border: 1px solid #D1D5DB;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.9rem;
+            color: #111827;
+            outline: none;
+            background-color: #F9FAFB;
+        }
+
+        .pro-activity-input::placeholder,
+        .pro-activity-textarea::placeholder {
+            color: #9CA3AF;
+        }
+
+        .pro-activity-input:focus,
+        .pro-activity-select:focus,
+        .pro-activity-textarea:focus {
+            border-color: #16A34A;
+            background-color: #FFFFFF;
+            box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.15);
+        }
+
+        .pro-activity-textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .pro-activity-help-text {
+            font-size: 0.8rem;
+            color: #6B7280;
+        }
+
+        @media (max-width: 768px) {
+            .pro-activity-form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .pro-activity-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="profil-main pro-activity-main">
+    <div class="container">
+        <!-- En-tête retour + titre + bouton sauvegarder -->
+        <div class="pro-activity-header">
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <a href="{% url 'clients:mon_espace' idclient=client.idclient %}" class="pro-activity-back">
+                    <span>←</span>
+                    <span>Retour</span>
+                </a>
+                <h1 class="pro-activity-title">Activité Professionnelle</h1>
+            </div>
+            <button type="submit" form="infos-pro-form" class="pro-activity-save-btn">Sauvegarder</button>
+        </div>
+
+        <!-- Onglets de la page activité professionnelle -->
+        <div class="pro-activity-tabs">
+            <button class="pro-activity-tab active" type="button">Informations professionnelles</button>
+            <button class="pro-activity-tab" type="button">Statut juridique</button>
+            <button class="pro-activity-tab" type="button">Numéros d'identification</button>
+            <button class="pro-activity-tab" type="button">Attestations</button>
+        </div>
+
+        <!-- Carte formulaire Informations professionnelles -->
+        <section class="pro-activity-card">
+            <h2 class="pro-activity-card-title">Informations professionnelles</h2>
+            <p class="pro-activity-card-subtitle">
+                Renseignez les informations relatives à votre activité professionnelle
+            </p>
+
+            <form id="infos-pro-form" method="post">
+                {% csrf_token %}
+
+                <div class="pro-activity-form-grid-2">
+                    <div class="pro-activity-form-group">
+                        <label for="raison_sociale">Nom de l'entreprise / Raison sociale</label>
+                        <input
+                            type="text"
+                            id="raison_sociale"
+                            name="raison_sociale"
+                            class="pro-activity-input"
+                            placeholder="Ex: Consulting SPRL"
+                        >
+                    </div>
+
+                    <div class="pro-activity-form-group">
+                        <label for="type_activite">Type d'activité</label>
+                        <select id="type_activite" name="type_activite" class="pro-activity-select">
+                            <option value="" disabled selected>Sélectionnez</option>
+                            <option value="services">Services</option>
+                            <option value="commerce">Commerce</option>
+                            <option value="liberale">Profession libérale</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pro-activity-form-group">
+                    <label for="description_activite">Description de l'activité</label>
+                    <textarea
+                        id="description_activite"
+                        name="description_activite"
+                        class="pro-activity-textarea"
+                        placeholder="Décrivez votre activité professionnelle"
+                    ></textarea>
+                </div>
+
+                <div class="pro-activity-form-grid-2">
+                    <div class="pro-activity-form-group">
+                        <label for="date_debut">Date de début d'activité</label>
+                        <input
+                            type="date"
+                            id="date_debut"
+                            name="date_debut"
+                            class="pro-activity-input"
+                        >
+                    </div>
+
+                    <div class="pro-activity-form-group">
+                        <label for="code_nace">Code NACE (activité économique)</label>
+                        <input
+                            type="text"
+                            id="code_nace"
+                            name="code_nace"
+                            class="pro-activity-input"
+                            placeholder="Ex: 62.020"
+                        >
+                    </div>
+                </div>
+
+                <div class="pro-activity-form-group">
+                    <label for="adresse_siege">Adresse du siège social</label>
+                    <input
+                        type="text"
+                        id="adresse_siege"
+                        name="adresse_siege"
+                        class="pro-activity-input"
+                        placeholder="Rue, numéro"
+                    >
+                    <p class="pro-activity-help-text">Complétez l'adresse officielle liée à votre activité.</p>
+                </div>
+
+                <div class="profil-actions" style="margin-top: 1.5rem;">
+                    <button type="submit" class="profil-submit-btn">Sauvegarder</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+<script src="{% static 'js/particulier.js' %}"></script>
+</body>
+</html>

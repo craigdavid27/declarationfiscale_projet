@@ -242,3 +242,115 @@ class DepenseView:
                 return redirect(f"/clients/{idclient}/mes-depenses/")
 
         return render(request, f"client/depenses_form.html", context={"errors": errors, "initial": initial, "client": client, "type_depenses": type_depenses})
+    
+class ClientDetailView:
+    def mon_profil(self, request, idclient: int):
+        # Basic session gate: allow if logged client matches or staff logged
+        session_client_id = request.session.get("client_id")
+        session_membre_id = request.session.get("membre_id")
+        if not session_membre_id and session_client_id != idclient:
+            return redirect("login")
+        # Load client and related address + city
+        
+        if request.method == "POST":
+            # Process form submission to update client info
+            client = get_object_or_404(Client.objects.select_related("adresse__ville"), pk=idclient)
+
+            nom = request.POST.get("nom", "").strip()
+            prenom = request.POST.get("prenom", "").strip()
+            registre_national = request.POST.get("registre_national", "").strip()   
+            telephone = request.POST.get("telephone", "").strip()
+            iban = request.POST.get("iban", "").strip()
+
+            # Simple validation (can be expanded)
+            errors = []
+            if not nom:
+                errors.append("Le nom est obligatoire.")
+            if not prenom:
+                errors.append("Le prénom est obligatoire.")
+            if not registre_national:
+                errors.append("Le numéro de registre national est obligatoire.")
+            if not telephone:
+                errors.append("Le téléphone est obligatoire.")
+            if not iban:
+                errors.append("L'IBAN est obligatoire.")
+
+            if not errors:
+                # Update client info
+                client.nom = nom
+                client.prenom = prenom
+                client.telephone = telephone
+                client.iban = iban
+                client.save()
+
+                return redirect(f"/clients/{idclient}/mon-profil/")
+
+            # If errors, re-render the form with errors
+            context = {
+                "title": "Mes informations personnelles",
+                "client": client,
+                "errors": errors,
+            }
+            return render(request, 'client/mon_profil.html', context=context)
+        
+        client = get_object_or_404(Client.objects.select_related("adresse__ville"), pk=idclient)
+
+        # récupérer le registre national si le client est un particulier
+        particulier = Particulier.objects.filter(client=client).first()
+        if particulier:
+            client.registre_national = particulier.registre_national
+
+        context = {
+            "title": "Mes informations personnelles",
+            "client": client,
+        }
+
+        return render(request, 'client/mon_profil.html', context=context)
+    
+    def mon_adresse(self, request, idclient: int):
+        # Basic session gate: allow if logged client matches or staff logged
+        session_client_id = request.session.get("client_id")
+        session_membre_id = request.session.get("membre_id")
+        if not session_membre_id and session_client_id != idclient:
+            return redirect("login")
+        # Load client and related address + city
+        client = get_object_or_404(Client.objects.select_related("adresse__ville"), pk=idclient)
+
+        context = {
+            "title": "Mon adresse",
+            "client": client,
+        }
+
+        return render(request, 'client/coordonnees.html', context=context)
+    
+    def connexion(self, request, idclient: int):
+        # Basic session gate: allow if logged client matches or staff logged
+        session_client_id = request.session.get("client_id")
+        session_membre_id = request.session.get("membre_id")
+        if not session_membre_id and session_client_id != idclient:
+            return redirect("login")
+        # Load client
+        client = get_object_or_404(Client, pk=idclient)
+
+        context = {
+            "title": "Mes informations de connexion",
+            "client": client,
+        }
+
+        return render(request, 'client/mon_profil_connexion.html', context=context)
+    
+    def mes_charges(self, request, idclient: int):
+        # Basic session gate: allow if logged client matches or staff logged
+        session_client_id = request.session.get("client_id")
+        session_membre_id = request.session.get("membre_id")
+        if not session_membre_id and session_client_id != idclient:
+            return redirect("login")
+        # Load client
+        client = get_object_or_404(Client, pk=idclient)
+
+        context = {
+            "title": "Mes personnes à charge",
+            "client": client,
+        }
+
+        return render(request, 'client/personnes_a_charge.html', context=context)

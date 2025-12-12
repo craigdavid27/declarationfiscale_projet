@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Informations personnelles</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profil.css' %}">
+</head>
+<body>
+    {% block content %}
+    <main class="profil-main">
+        <div class="container">
+            <!-- En-tête retour + titre -->
+            <div class="profil-header">
+                <a href="{% url 'clients:mon_espace' idclient=client.idclient %}" class="profil-back-link">← Retour</a>
+                <div class="profil-title-block">
+                    <h1 class="profil-title">Mon Profil</h1>
+                    <p class="profil-subtitle">Gérez vos informations personnelles</p>
+                </div>
+            </div>
+
+            <!-- Onglets de navigation du profil -->
+            <div class="profil-tabs">
+                <button class="profil-tab active">
+                    <span class="profil-tab-icon">👤</span>
+                    <span>Informations</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">📍</span>
+                    <span>Coordonnées</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">🔐</span>
+                    <span>Connexion</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">👨‍👩‍👧</span>
+                    <span>Personnes à charge</span>
+                </button>
+            </div>
+
+            <!-- Carte informations personnelles -->
+            <section class="profil-card">
+                <header class="profil-card-header">
+                    <div class="profil-card-icon">👤</div>
+                    <div>
+                        <h2 class="profil-card-title">Informations Personnelles</h2>
+                        <p class="profil-card-description">Vos informations d'identité et coordonnées bancaires</p>
+                    </div>
+                </header>
+
+                <form class="profil-form" method="post" action="{% url 'clients:mon_profil' idclient=client.idclient %}">
+                    {% csrf_token %}
+                    <div class="profil-form-grid">
+                        <div class="profil-form-group">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" name="nom" value="{{ client.nom }}" placeholder="Dubois">
+                        </div>
+                        <div class="profil-form-group">
+                            <label for="prenom">Prénom</label>
+                            <input type="text" id="prenom" name="prenom" value="{{ client.prenom }}" placeholder="Marie">
+                        </div>
+                    </div>
+
+                    <div class="profil-form-group">
+                        <label for="telephone">Téléphone</label>
+                        <input type="text" id="telephone" name="telephone" value="{{ client.telephone }}" placeholder="+32 123 45 67 89">
+                        <p class="profil-help-text">Votre numéro de téléphone</p>
+                    </div>
+                    {% if client.type_client == 'particulier' %}
+                    <div class="profil-form-group">
+                        <label for="registre_national">Numéro de registre national</label>
+                        <input type="text" id="registre_national" name="registre_national" value="{{ client.registre_national }}" placeholder="85.06.15-123.45">
+                        <p class="profil-help-text">Format: XX.XX.XX-XXX.XX (Date de naissance - Numéro de suite)</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="profil-form-group">
+                        <label for="iban">IBAN</label>
+                        <input type="text" id="iban" name="iban" value="{{ client.iban }}" placeholder="BE68 5390 0754 7034">
+                        <p class="profil-help-text">Votre numéro de compte bancaire international</p>
+                    </div>
+
+                    <div class="profil-actions">
+                        <button type="submit" class="profil-submit-btn">Enregistrer</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="{% static 'js/particulier.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

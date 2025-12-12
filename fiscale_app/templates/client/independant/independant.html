@@ -380,10 +380,24 @@
                     <div class="espace-nav-card">
                         <div class="card-icon">👤</div>
                         <h3 class="card-title">Mon Profil</h3>
-                        <ul class="card-items">
-                            <li>Informations personnelles</li>
-                            <li>Coordonnées</li>
-                            <li>Informations de connexion</li>
+                        <ul class="card-items"><li><a href="{% url 'clients:mon_profil' idclient=client.idclient %}" class="nav-item">
+                                <span>Informations personnelles</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                            <li><a href="{% url 'clients:mon_adresse' idclient=client.idclient %}" class="nav-item">
+                                <span>Coordonnées</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                            <li><a href="{% url 'clients:connexion' idclient=client.idclient %}" class="nav-item">
+                                <span>Informations de connexion</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
                         </ul>
                     </div>
 

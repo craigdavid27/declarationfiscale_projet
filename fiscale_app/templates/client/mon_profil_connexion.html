@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Connexion</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profil.css' %}">
+</head>
+<body>
+    {% block content %}
+    <main class="profil-main">
+        <div class="container">
+            <!-- En-tête retour + titre -->
+            <div class="profil-header">
+                <a href="{% url 'clients:mon_espace' idclient=client.idclient %}" class="profil-back-link">← Retour</a>
+                <div class="profil-title-block">
+                    <h1 class="profil-title">Mon Profil</h1>
+                    <p class="profil-subtitle">Gérez vos informations personnelles</p>
+                </div>
+            </div>
+
+            <!-- Onglets de navigation du profil -->
+            <div class="profil-tabs">
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">👤</span>
+                    <span>Informations</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">📍</span>
+                    <span>Coordonnées</span>
+                </button>
+                <button class="profil-tab active">
+                    <span class="profil-tab-icon">🔐</span>
+                    <span>Connexion</span>
+                </button>
+                <button class="profil-tab">
+                    <span class="profil-tab-icon">👨‍👩‍👧</span>
+                    <span>Personnes à charge</span>
+                </button>
+            </div>
+
+            <!-- Carte modification du mot de passe -->
+            <section class="profil-card">
+                <header class="profil-card-header">
+                    <div class="profil-card-icon">🔒</div>
+                    <div>
+                        <h2 class="profil-card-title">Modifier le mot de passe</h2>
+                        <p class="profil-card-description">Changez votre mot de passe de connexion au site</p>
+                    </div>
+                </header>
+
+                <form class="profil-form" method="post" action="{% url 'clients:connexion' idclient=client.idclient %}">
+                    {% csrf_token %}
+                    <div class="profil-form-group">
+                        <label for="mot_de_passe_actuel">Mot de passe actuel</label>
+                        <input type="password" id="mot_de_passe_actuel" name="mot_de_passe_actuel" placeholder="Entrez votre mot de passe actuel">
+                    </div>
+
+                    <div class="profil-form-group">
+                        <label for="nouveau_mot_de_passe">Nouveau mot de passe</label>
+                        <input type="password" id="nouveau_mot_de_passe" name="nouveau_mot_de_passe" placeholder="Entrez votre nouveau mot de passe">
+                        <p class="profil-help-text">Le mot de passe doit contenir au moins 8 caractères</p>
+                    </div>
+
+                    <div class="profil-form-group">
+                        <label for="confirmer_nouveau_mot_de_passe">Confirmer le nouveau mot de passe</label>
+                        <input type="password" id="confirmer_nouveau_mot_de_passe" name="confirmer_nouveau_mot_de_passe" placeholder="Confirmez votre nouveau mot de passe">
+                    </div>
+
+                    <div class="profil-actions">
+                        <button type="submit" name="form_type" value="password" class="profil-submit-btn">Changer le mot de passe</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Carte modification de l'adresse email -->
+            <section class="profil-card">
+                <header class="profil-card-header">
+                    <div class="profil-card-icon">✉️</div>
+                    <div>
+                        <h2 class="profil-card-title">Modifier l'adresse email</h2>
+                        <p class="profil-card-description">Mettez à jour votre adresse email de connexion</p>
+                    </div>
+                </header>
+
+                <form class="profil-form" method="post" action="">
+                    {% csrf_token %}
+                    <div class="profil-form-group">
+                        <label for="nouvel_email">Nouvelle adresse email</label>
+                        <input type="email" id="nouvel_email" name="nouvel_email" placeholder="Entrez votre nouvelle adresse email" value="{{ client.email }}">
+                    </div>
+
+                    <div class="profil-form-group">
+                        <label for="mot_de_passe_confirmation">Mot de passe</label>
+                        <input type="password" id="mot_de_passe_confirmation" name="mot_de_passe_confirmation" placeholder="Entrez votre mot de passe pour confirmer">
+                    </div>
+
+                    <div class="profil-actions">
+                        <button type="submit" name="form_type" value="email" class="profil-submit-btn">Changer l'adresse email</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="{% static 'js/particulier.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

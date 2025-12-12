@@ -123,25 +123,25 @@
                             <h3>Mon Profil</h3>
                         </div>
                         <ul class="nav-items">
-                            <li><a href="#" class="nav-item">
+                            <li><a href="{% url 'clients:mon_profil' idclient=client.idclient %}" class="nav-item">
                                 <span>Informations personnelles</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </a></li>
-                            <li><a href="#" class="nav-item">
+                            <li><a href="{% url 'clients:mon_adresse' idclient=client.idclient %}" class="nav-item">
                                 <span>Coordonnées</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </a></li>
-                            <li><a href="#" class="nav-item">
+                            <li><a href="{% url 'clients:connexion' idclient=client.idclient %}" class="nav-item">
                                 <span>Informations de connexion</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>
                             </a></li>
-                            <li><a href="#" class="nav-item">
+                            <li><a href="{% url 'clients:mes_charges' idclient=client.idclient %}" class="nav-item">
                                 <span>Personnes à charge</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>

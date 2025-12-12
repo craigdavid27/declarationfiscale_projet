@@ -1,0 +1,229 @@
+/* Page Mon Profil - Informations personnelles */
+
+.profil-main {
+    padding: 2.5rem 0 4rem;
+}
+
+.profil-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.profil-back-link {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.profil-back-link:hover {
+    color: var(--primary-color);
+}
+
+.profil-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.profil-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.profil-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+/* Onglets */
+
+.profil-tabs {
+    display: flex;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.profil-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-radius: 999px 999px 0 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    cursor: pointer;
+}
+
+.profil-tab-icon {
+    font-size: 1rem;
+}
+
+.profil-tab.active {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    font-weight: 600;
+}
+
+/* Carte infos personnelles */
+
+.profil-card {
+    background: var(--card-bg);
+    border-radius: 0.75rem;
+    padding: 1.75rem 1.75rem 2rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.profil-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.profil-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ECFDF5;
+    color: #047857;
+    font-size: 1.25rem;
+}
+
+.profil-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.profil-card-description {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.15rem;
+}
+
+/* Formulaire */
+
+.profil-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.profil-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.5rem;
+}
+
+.profil-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.profil-form-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.profil-form-group input {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    padding: 0.65rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.profil-form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.15);
+}
+
+.profil-help-text {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.profil-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.profil-submit-btn {
+    padding: 0.75rem 1.75rem;
+    border-radius: 999px;
+    border: none;
+    background: #16A34A;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.profil-submit-btn:hover {
+    background: #15803D;
+}
+
+@media (max-width: 768px) {
+    .profil-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profil-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Personnes à charge */
+
+.profil-add-btn {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background-color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+.profil-add-btn:hover {
+    background-color: #F3F4F6;
+}
+
+.profil-dependent-section {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.25rem 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px dashed var(--border-color);
+    background-color: #F9FAFB;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profil-dependent-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
