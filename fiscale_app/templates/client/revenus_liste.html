@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes revenus - My Fisc</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+</head>
+<body>
+    {% block content %}
+<header class="header">
+    <div class="container">
+        <div class="header-left">
+            <a href="{% url 'clients:mon_espace' client.idclient %}" class="back-link">← Retour à mon espace</a>
+            <div class="header-title">
+                <div class="logo-circle">O</div>
+                <div>
+                    <h1>My Fisc</h1>
+                    <p>Client {{ client_type }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="user-profile">
+            <span class="user-name">{{ client.prenom }} {{ client.nom }}</span>
+            <span class="user-role">{{ client_type }}</span>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <section class="welcome-section">
+            <h2>Mes revenus</h2>
+            <p>Liste de tous vos revenus déclarés.</p>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="section-header" style="justify-content: space-between; align-items: center;">
+                <div>
+                    <h3>Revenus</h3>
+                    <p class="section-subtitle">Montant, année de perception et type de revenu</p>
+                </div>
+                <a href="{% url 'clients:new_revenu' client.idclient %}" class="button-primary">+ Ajouter un revenu</a>
+            </div>
+
+            {% if revenus %}
+                <div class="table-wrapper revenus-table-wrapper">
+                    <table class="data-table revenus-table">
+                        <thead>
+                            <tr>
+                                <th>Année de perception</th>
+                                <th class="amount-header">Montant (€)</th>
+                                <th>Type de revenu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for revenu in revenus %}
+                                <tr>
+                                    <td class="year-cell">{{ revenu.annee_de_perception }}</td>
+                                    <td class="amount-cell">{{ revenu.montant }}</td>
+                                    <td>
+                                        <span class="revenu-type-chip">
+                                            {{ revenu.type_revenu.nom }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-state">Aucun revenu n'a encore été encodé.</p>
+            {% endif %}
+        </section>
+    </div>
+</main>
+{% endblock %}
+</body>
+</html>

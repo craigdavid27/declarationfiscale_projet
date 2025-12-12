@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes dépenses - My Fisc</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+</head>
+<body>
+    {% block content %}
+<header class="header">
+    <div class="container">
+        <div class="header-left">
+            <a href="{% url 'clients:mon_espace' client.idclient %}" class="back-link">← Retour à mon espace</a>
+            <div class="header-title">
+                <div class="logo-circle">O</div>
+                <div>
+                    <h1>My Fisc</h1>
+                    <p>Client {{ client_type }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="user-profile">
+            <span class="user-name">{{ client.prenom }} {{ client.nom }}</span>
+            <span class="user-role">{{ client_type }}</span>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <section class="welcome-section">
+            <h2>Mes dépenses</h2>
+            <p>Liste de toutes vos dépenses déclarées.</p>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="section-header" style="justify-content: space-between; align-items: center;">
+                <div>
+                    <h3>Dépenses</h3>
+                    <p class="section-subtitle">Montant, année de dépense et type de dépense</p>
+                </div>
+                <a href="{% url 'clients:new_depense' client.idclient %}" class="button-primary">+ Ajouter une dépense</a>
+            </div>
+
+            {% if depenses %}
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Année de dépense</th>
+                                <th class="amount-header">Montant (€)</th>
+                                <th>Type de dépense</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for depense in depenses %}
+                                <tr>
+                                    <td>{{ depense.annee_depense }}</td>
+                                    <td class="amount-cell">{{ depense.montant }}</td>
+                                    <td><span class="depense-type-chip">{{ depense.type_depense.nom }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Aucune dépense n'a encore été déclarée.</p>
+            {% endif %}
+        </section>
+    </div>
+</main>
+{% endblock %}
+</body>
+</html>

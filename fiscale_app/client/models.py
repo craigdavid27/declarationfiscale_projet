@@ -39,21 +39,21 @@ class Independant(models.Model):
     numero_entreprise = models.CharField(primary_key=True, max_length=10)
     nom_entreprise = models.CharField(max_length=100)
     date_debut_entreprise = models.CharField(max_length=45, blank=True, null=True)
-    client_idclient = models.ForeignKey(Client, on_delete=models.CASCADE, db_column='idclient')  # Field name made lowercase.
+    client_idclient = models.ForeignKey(Client, on_delete=models.CASCADE, db_column='idclient', related_name='independants')  # Field name made lowercase.
 
     class Meta:
         db_table = 'independant'
 
 
 class Particulier(models.Model):
-    registre_national = models.CharField(primary_key=True, max_length=11)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, db_column='idclient')  # Field name made lowercase.
+    registre_national = models.CharField(primary_key=True, max_length=15)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, db_column='idclient', related_name='particuliers')  # Field name made lowercase.
 
     class Meta:
         db_table = 'particulier'
 
 class PersonneACharge(models.Model):
-    registre_national = models.CharField(db_column='registre_national', max_length=11, primary_key=True)  # Field name made lowercase.
+    registre_national = models.CharField(db_column='registre_national', max_length=15, primary_key=True)  # Field name made lowercase.
     date_de_naissance = models.IntegerField(blank=True, null=True)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, db_column='idclient')  # Field name made lowercase.
 

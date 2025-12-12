@@ -11,7 +11,6 @@ class TypeImpot(models.Model):
         db_table = 'type_impot'
 
 class DeclarationFiscale(models.Model):
-    
     iddeclaration_fiscale = models.AutoField(db_column='idDeclaration_fiscale', primary_key=True)  # Field name made lowercase.
     annee = models.IntegerField()
     lien = models.CharField(max_length=255, blank=True, null=True)

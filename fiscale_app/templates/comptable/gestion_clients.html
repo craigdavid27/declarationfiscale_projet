@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Clients - My Fisc</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    {% block content %}
+    <!-- Header -->
+    <div class="clients-header">
+        <button class="back-btn" onclick="window.location.href='comptable.html'">← Retour</button>
+        <h1 class="page-title">Gestion des Clients</h1>
+        <button class="new-client-btn">+ Nouveau Client</button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="clients-main">
+        <div class="container">
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Rechercher un client..." id="searchInput">
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="tab-btn active" data-filter="tous">Tous (6)</button>
+                <button class="tab-btn" data-filter="independants">Indépendants (3)</button>
+                <button class="tab-btn" data-filter="particuliers">Particuliers (3)</button>
+            </div>
+
+            <!-- Results Count -->
+            <div class="results-count">
+                <p id="resultCount">6 clients trouvés</p>
+            </div>
+
+            <!-- Clients Grid -->
+            <div class="clients-grid" id="clientsGrid">
+                <!-- Client Card -->
+                 {% for client in clients %}
+                <div class="client-card" data-type="independant">
+                    <div class="client-card-header">
+                        <div class="client-avatar">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <circle cx="20" cy="20" r="20" fill="#E8E9EF"/>
+                                <path d="M20 22C23.3137 22 26 19.3137 26 16C26 12.6863 23.3137 10 20 10C16.6863 10 14 12.6863 14 16C14 19.3137 16.6863 22 20 22Z" fill="#9CA3AF"/>
+                                <path d="M10 32C10 26.4772 14.4772 22 20 22C25.5228 22 30 26.4772 30 32V34H10V32Z" fill="#9CA3AF"/>
+                            </svg>
+                        </div>
+                        <div class="client-info">
+                            <h3 class="client-name">{{ client.prenom }} {{ client.nom }}</h3>
+                            <span class="client-badge badge-independant">{{ client.type }}</span>
+                        </div>
+                    </div>
+                    <div class="client-card-body">
+                        <div class="client-detail">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">{{ client.email }}</span>
+                        </div>
+                        <div class="client-detail">
+                            <span class="detail-label">Tél:</span>
+                            <span class="detail-value">{{ client.telephone }}</span>
+                        </div>
+                        <div class="client-detail">
+                            <span class="detail-label">N° National:</span>
+                            <span class="detail-value">{{ client.registre_national }}</span>
+                        </div>
+                        <div class="client-status">
+                            <span class="status-label">En cours</span>
+                            <span class="status-percentage">{{ client.progression }}%</span>
+                        </div>
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-fill" style="width: \{\{ client\.progression \}\}\%; background: #10B981;"></div>
+                        </div>
+                    </div>
+                    <div class="client-card-footer">
+                        <button class="card-btn btn-view">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M8 3C4.5 3 1.73 5.11 1 8C1.73 10.89 4.5 13 8 13C11.5 13 14.27 10.89 15 8C14.27 5.11 11.5 3 8 3ZM8 11C6.34 11 5 9.66 5 8C5 6.34 6.34 5 8 5C9.66 5 11 6.34 11 8C11 9.66 9.66 11 8 11Z" fill="currentColor"/>
+                            </svg>
+                            Voir
+                        </button>
+                        <button class="card-btn btn-edit">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M11.5 1.5L14.5 4.5L5 14H2V11L11.5 1.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            </svg>
+                            Modifier
+                        </button>
+                        <button class="card-btn btn-download">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M8 11L4 7H6V2H10V7H12L8 11Z" fill="currentColor"/>
+                                <path d="M2 13H14V15H2V13Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Filter functionality
+        const tabs = document.querySelectorAll('.tab-btn');
+        const clientCards = document.querySelectorAll('.client-card');
+        const resultCount = document.getElementById('resultCount');
+        const searchInput = document.getElementById('searchInput');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const filter = tab.dataset.filter;
+                filterClients(filter);
+            });
+        });
+
+        function filterClients(filter) {
+            let visibleCount = 0;
+
+            clientCards.forEach(card => {
+                const type = card.dataset.type;
+                
+                if (filter === 'tous') {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else if (filter === 'independants' && type === 'independant') {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else if (filter === 'particuliers' && type === 'particulier') {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            resultCount.textContent = `${visibleCount} client${visibleCount > 1 ? 's' : ''} trouvé${visibleCount > 1 ? 's' : ''}`;
+        }
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            let visibleCount = 0;
+
+            clientCards.forEach(card => {
+                const clientName = card.querySelector('.client-name').textContent.toLowerCase();
+                const email = card.querySelector('.detail-value').textContent.toLowerCase();
+                
+                if (clientName.includes(searchTerm) || email.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            resultCount.textContent = `${visibleCount} client${visibleCount > 1 ? 's' : ''} trouvé${visibleCount > 1 ? 's' : ''}`;
+        });
+    </script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

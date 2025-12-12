@@ -1,0 +1,594 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes déclarations - My Fisc</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #F9FAFB;
+            color: #111827;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-header {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 1.25rem 4rem 0.75rem;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.95rem;
+            color: #4B5563;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #111827;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tab-button {
+            border: none;
+            background: transparent;
+            padding: 0.75rem 1.5rem;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: #4B5563;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .tab-button.active {
+            background-color: #EEF2FF;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .tab-button:not(.active):hover {
+            background-color: #F3F4F6;
+        }
+
+        .page-content {
+            flex: 1;
+            padding: 2rem 4rem 3rem;
+        }
+
+        .card-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .declaration-list {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            border: 1px solid #E5E7EB;
+            padding: 1rem 1.25rem;
+        }
+
+        .declaration-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 0.75rem;
+            border-radius: 0.75rem;
+            transition: background-color 0.15s;
+        }
+
+        .declaration-card + .declaration-card {
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .declaration-card:hover {
+            background-color: #F9FAFB;
+        }
+
+        .decl-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .decl-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.75rem;
+            background-color: #EEF2FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4F46E5;
+            font-size: 1.25rem;
+        }
+
+        .decl-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .decl-title {
+            font-size: 0.98rem;
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+        }
+
+        .decl-sub {
+            font-size: 0.8rem;
+            color: #6B7280;
+        }
+
+        .decl-bottom {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        .status-pill {
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        .status-soumise {
+            background-color: #DBEAFE;
+            color: #1D4ED8;
+        }
+
+        .status-valide {
+            background-color: #DCFCE7;
+            color: #166534;
+        }
+
+        .status-en_attente,
+        .status-en_cours,
+        .status-à_reviser {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .decl-tax-text {
+            color: #6B7280;
+        }
+
+        .decl-tax-amount {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .decl-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .voir-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            border: 1px solid #E5E7EB;
+            background-color: #FFFFFF;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #111827;
+        }
+
+        .voir-button:hover {
+            background-color: #F3F4F6;
+        }
+
+        .voir-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 999px;
+            border: 1px solid #D1D5DB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        /* Modale */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            max-width: 520px;
+            width: 100%;
+            padding: 1.5rem 1.75rem 1.75rem;
+            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #6B7280;
+        }
+
+        .modal-section-title {
+            font-size: 0.86rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6B7280;
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem 1.25rem;
+            font-size: 0.9rem;
+        }
+
+        .modal-label {
+            color: #6B7280;
+        }
+
+        .modal-value {
+            font-weight: 500;
+        }
+
+        .modal-highlight {
+            margin-top: 1.25rem;
+            padding: 0.9rem 1rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(90deg, #EEF2FF, #DBEAFE);
+            border: 1px solid #E5E7EB;
+        }
+
+        .modal-highlight-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #4B5563;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-highlight-amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.25rem 0 0.5rem;
+        }
+
+        .modal-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .modal-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-sign {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .modal-sign.plus {
+            background-color: #DCFCE7;
+            color: #166534;
+        }
+
+        .modal-sign.minus {
+            background-color: #FEE2E2;
+            color: #B91C1C;
+        }
+
+        .modal-item-label {
+            flex: 1;
+            color: #374151;
+        }
+
+        .modal-item-amount {
+            font-weight: 500;
+            color: #111827;
+            margin-left: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .modal-empty-text {
+            font-size: 0.85rem;
+            color: #9CA3AF;
+            margin: 0.15rem 0 0.35rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-header,
+            .page-content {
+                padding-inline: 1.25rem;
+            }
+
+            .declaration-card {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .decl-right {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <header class="page-header">
+        <div class="header-top">
+            <a href="javascript:history.back()" class="back-link">← Retour</a>
+        </div>
+        <h1 class="page-title">Historique</h1>
+
+        <div class="tabs">
+            <button type="button" class="tab-button active">Mes déclarations</button>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section class="card-container">
+            <h2 class="section-title">Déclarations passées</h2>
+            <p class="section-subtitle">Historique de vos déclarations fiscales</p>
+
+            {% if declarations_data %}
+                <div class="declaration-list">
+                    {% for decl in declarations_data %}
+                        <article class="declaration-card">
+                            <div class="decl-left">
+                                <div class="decl-icon">📄</div>
+                                <div class="decl-main">
+                                    <div class="decl-title">{{ decl.label }}</div>
+                                    <div class="decl-sub">
+                                        Soumis le 
+                                        {% if decl.instance.lien %}
+                                            {{ decl.instance.lien }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </div>
+                                    <div class="decl-bottom">
+                                        <span class="status-pill status-{{ decl.statut }}">{{ decl.statut_label }}</span>
+                                        <span class="decl-tax-text">Impôt calculé : <span class="decl-tax-amount">{{ decl.tax_amount|floatformat:2 }} €</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="decl-right">
+                                <button type="button" class="voir-button" data-open-modal="modal-{{ decl.instance.iddeclaration_fiscale }}">
+                                    <span class="voir-icon">👁</span>
+                                    <span>Voir</span>
+                                </button>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="section-subtitle">Vous n'avez pas encore de déclarations fiscales enregistrées.</p>
+            {% endif %}
+        </section>
+    </main>
+</div>
+
+{% for decl in declarations_data %}
+<div class="modal-backdrop" id="modal-{{ decl.instance.iddeclaration_fiscale }}">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title-{{ decl.instance.iddeclaration_fiscale }}">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title-{{ decl.instance.iddeclaration_fiscale }}">Détail du calcul fiscal - {{ decl.label }}</h2>
+            <button type="button" class="modal-close" data-close-modal="modal-{{ decl.instance.iddeclaration_fiscale }}">×</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="modal-section">
+                <div class="modal-section-title">Récapitulatif</div>
+                <div class="modal-grid">
+                    <div>
+                        <div class="modal-label">Année fiscale</div>
+                        <div class="modal-value">{{ decl.annee }}</div>
+                    </div>
+                    <div>
+                        <div class="modal-label">Type d'impôt</div>
+                        <div class="modal-value">{{ decl.tax_type }}</div>
+                    </div>
+                    <div>
+                        <div class="modal-label">Total des revenus</div>
+                        <div class="modal-value">{{ decl.total_revenus }} €</div>
+                    </div>
+                    <div>
+                        <div class="modal-label">Total des dépenses</div>
+                        <div class="modal-value">{{ decl.total_depenses }} €</div>
+                    </div>
+                    <div>
+                        <div class="modal-label">Base imposable</div>
+                        <div class="modal-value">{{ decl.base_imposable }} €</div>
+                    </div>
+                    <div>
+                        <div class="modal-label">Taux appliqué</div>
+                        <div class="modal-value">{{ decl.tax_rate|floatformat:1 }} %</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-section" style="margin-top: 1rem;">
+                <div class="modal-section-title">Détail des revenus</div>
+                {% if decl.revenus_details %}
+                    <ul class="modal-list">
+                        {% for r in decl.revenus_details %}
+                            <li class="modal-list-item">
+                                <div>
+                                    <span class="modal-sign plus">+</span>
+                                    <span class="modal-item-label">{{ r.type }}</span>
+                                </div>
+                                <span class="modal-item-amount">{{ r.montant }} €</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="modal-empty-text">Aucun revenu encodé pour cette année fiscale.</p>
+                {% endif %}
+            </div>
+
+            <div class="modal-section" style="margin-top: 0.75rem;">
+                <div class="modal-section-title">Détail des dépenses déductibles</div>
+                {% if decl.depenses_details %}
+                    <ul class="modal-list">
+                        {% for d in decl.depenses_details %}
+                            <li class="modal-list-item">
+                                <div>
+                                    <span class="modal-sign minus">-</span>
+                                    <span class="modal-item-label">{{ d.type }}</span>
+                                </div>
+                                <span class="modal-item-amount">{{ d.montant }} €</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="modal-empty-text">Aucune dépense déductible encodée pour cette année fiscale.</p>
+                {% endif %}
+            </div>
+
+            {% if decl.tax_type == "ISOC" and decl.tax_brackets %}
+                <div class="modal-section" style="margin-top: 0.75rem;">
+                    <div class="modal-section-title">Détail du calcul ISOC</div>
+                    <ul class="modal-list">
+                        {% for b in decl.tax_brackets %}
+                            <li class="modal-list-item">
+                                <div class="modal-item-label">
+                                    {{ b.label }} — taux {{ b.rate|floatformat:1 }} %
+                                </div>
+                                <span class="modal-item-amount">
+                                    Base {{ b.base }} € → Impôt {{ b.tax|floatformat:2 }} €
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="modal-highlight">
+                <div class="modal-highlight-title">Impôt dû pour {{ decl.annee }}</div>
+                <div class="modal-highlight-amount">{{ decl.tax_amount|floatformat:2 }} €</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    document.querySelectorAll('[data-open-modal]').forEach(function(button) {
+        button.addEventListener('click', function () {
+            var targetId = this.getAttribute('data-open-modal');
+            var modal = document.getElementById(targetId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-close-modal]').forEach(function(button) {
+        button.addEventListener('click', function () {
+            var targetId = this.getAttribute('data-close-modal');
+            var modal = document.getElementById(targetId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        });
+    });
+
+    document.querySelectorAll('.modal-backdrop').forEach(function(backdrop) {
+        backdrop.addEventListener('click', function (event) {
+            if (event.target === backdrop) {
+                backdrop.classList.remove('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>

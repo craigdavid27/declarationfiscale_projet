@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Comptables - My Fisc</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    {% block content %}
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <a href="{% url 'index' %}" class="back-link">← Retour à l'accueil</a>
+                <div class="header-title">
+                    <div class="logo-icon">💼</div>
+                    <div>
+                        <h1>My Fisc</h1>
+                        <p>Espace Comptables</p>
+                    </div>
+                </div>
+            </div>
+            <div class="user-profile">
+                <span class="user-name">{{ prenom }} {{ nom }}</span>
+                <span class="user-role">Comptable</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Tableau de bord Section -->
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h2>Tableau de bord</h2>
+                    <p>Vue d'ensemble de votre activité</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card stat-clients">
+                        <div class="stat-header">
+                            <div class="stat-icon">👥</div>
+                            <!-- <span class="stat-badge positive">+12%</span> -->
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-number">{{ total_clients }}</p>
+                            <p class="stat-label">Total Clients</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-declarations">
+                        <div class="stat-header">
+                            <div class="stat-icon">📋</div>
+                            <!-- <span class="stat-badge positive">+8%</span> -->
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-number">{{ declarations_en_cours }}</p>
+                            <p class="stat-label">Déclarations en cours</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-pending">
+                        <div class="stat-header">
+                            <div class="stat-icon">⏰</div>
+                            <!-- <span class="stat-badge negative">-3%</span> -->
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-number">{{ declarations_a_soumettre }}</p>
+                            <p class="stat-label">À soumettre</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-deadlines">
+                        <div class="stat-header">
+                            <div class="stat-icon">📅</div>
+                            <!-- <span class="stat-badge new">+2</span> -->
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-number">{{ echeances_cette_semaine }}</p>
+                            <p class="stat-label">Échéances cette semaine</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <!-- <div class="chart-section">
+                    <div class="chart-header">
+                        <h3>Évolution des déclarations</h3>
+                        <p>Nombre de déclarations traitées sur 6 mois</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="declarationsChart"></canvas>
+                    </div>
+                </div> -->
+            </section>
+
+            <section class="quick-actions-section">
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <h3>Gestion Clients</h3>
+                        <p>Gérer la base clients</p>
+                        <a href="{% url 'comptables:gestion_clients' id %}" class="action-link">→</a>
+                    </div>
+                    <div class="action-card">
+                        <h3>Suivi Déclarations</h3>
+                        <p>Suivre les déclarations</p>
+                        <a href="{% url 'comptables:suivi_declaration' id %}" class="action-link">→</a>
+                    </div>
+                    <div class="action-card">
+                        <h3>Calendrier</h3>
+                        <p>Voir les échéances</p>
+                        <a href="{% url 'comptables:calendrier' id %}" class="action-link">→</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Clients Section -->
+            <section class="recent-clients-section">
+                <div class="section-header">
+                    <h2>Clients récents</h2>
+                    <p>Dernières activités sur les dossiers clients</p>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="clients-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Statut</th>
+                                <th>Progression</th>
+                                <th>Dernière activité</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in recent_clients %}
+                            <tr>
+                                <td class="client-name">
+                                    <!-- <div class="client-avatar">{{ client.prenom|first|upper }}{{ client.nom|first|upper }}</div> -->
+                                    <div class="client-avatar">{{ client.initials }}</div>
+                                    {{ client.nom }}
+                                </td>
+                                <td>
+                                    {% if client.type == "Particulier" %}
+                                        <span class="badge badge-green">{{ client.type }}</span>
+                                    {% elif client.type == "Indépendant" %}
+                                        <span class="badge badge-blue">{{ client.type }}</span>
+                                    {% else %}
+                                        <span class="badge badge-gray">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if client.statut == "Complétée"  %}
+                                        <span class="badge badge-light-green">{{ client.statut }}</span>
+                                    {% elif client.statut == "Archivée" %}
+                                        <span class="badge badge-light-pink">{{ client.statut }}</span>
+                                    {% elif client.statut == "En préparation" %}
+                                        <span class="badge badge-light-orange">{{ client.statut }}</span>
+                                    {% elif client.statut == "En cours" %}
+                                        <span class="badge badge-light-blue">{{ client.statut }}</span>
+                                    {% elif client.statut == "Soumise" %}
+                                        <span class="badge badge-light-blue">{{ client.statut }}</span>
+                                    {% else %}
+                                        <span class="badge badge-gray">{{ client.statut }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="progress-container">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: \{\{ client\.progression \}\}\%"></div>
+                                        </div>
+                                        <span class="progress-text">{{client.progression}}%</span>
+                                    </div>
+                                </td>
+                                <td>Il y a {{ client.derniere_activite }}</td>
+                                <td class="actions-cell">
+                                    <button class="action-btn" title="Voir">👁️</button>
+                                    <button class="action-btn" title="Éditer">✏️</button>
+                                    <button class="action-btn" title="Télécharger">⬇️</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>My Fisc</h3>
+                    <p>Gestion fiscale professionnelle</p>
+                </div>
+                <div class="footer-info">
+                    <p>Cabinet comptable agréé en Belgique</p>
+                    <p>&copy; {% now 'Y' %} My Fisc - Gestion fiscale professionnelle</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

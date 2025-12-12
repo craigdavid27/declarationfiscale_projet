@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi des Déclarations - My Fisc</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .declarations-header {
+            background: white;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+
+        .declarations-header .container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .declarations-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .filter-tabs {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .filter-tabs .container {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .filter-tab {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            background: white;
+            color: var(--text-light);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-tab:hover {
+            background: var(--light-bg);
+            color: var(--text-dark);
+        }
+
+        .filter-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .declarations-table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .declarations-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .declarations-table thead {
+            background: var(--light-bg);
+        }
+
+        .declarations-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .declarations-table td {
+            padding: 1.5rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .declarations-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .declarations-table tbody tr:hover {
+            background: var(--light-bg);
+        }
+
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .client-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .client-type.particulier {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-badge.en-cours {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-badge.completee {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-badge.a-soumettre {
+            background: #F3E8FF;
+            color: #7C3AED;
+        }
+
+        .status-badge.en-attente {
+            background: #FED7AA;
+            color: #9A3412;
+        }
+
+        .status-badge.validee {
+            background: #E9D5FF;
+            color: #6B21A8;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--light-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            max-width: 120px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            min-width: 45px;
+        }
+
+        .actions-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--light-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+            font-size: 1.125rem;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-btn.send-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-btn.send-btn:hover {
+            background: #4338CA;
+        }
+
+        @media (max-width: 1200px) {
+            .declarations-table {
+                font-size: 0.875rem;
+            }
+
+            .declarations-table th,
+            .declarations-table td {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .declarations-table-container {
+                overflow-x: auto;
+            }
+
+            .declarations-table {
+                min-width: 900px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <a href="comptable.html" class="back-link">← Retour à l'accueil</a>
+                <div class="header-title">
+                    <div class="logo-icon">💼</div>
+                    <div>
+                        <h1>My Fisc</h1>
+                        <p>Espace Comptables</p>
+                    </div>
+                </div>
+            </div>
+            <div class="user-profile">
+                <span class="user-name">Marc Dupont</span>
+                <span class="user-role">Comptable</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Declarations Header -->
+    <div class="declarations-header">
+        <div class="container">
+            <a href="comptable.html" class="back-link">← Retour</a>
+            <h2 class="declarations-title">Suivi des Déclarations</h2>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <div class="container">
+            <button class="filter-tab active">Toutes</button>
+            <button class="filter-tab">Brouillon</button>
+            <button class="filter-tab">En cours</button>
+            <button class="filter-tab">En attente</button>
+            <button class="filter-tab">Validée</button>
+            <button class="filter-tab">Soumise</button>
+            <button class="filter-tab">Complétée</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="declarations-table-container">
+                <table class="declarations-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Année</th>
+                            <th>Statut</th>
+                            <th>Création</th>
+                            <th>Échéance</th>
+                            <th>Progression</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <span class="client-name">Marie Dubois</span>
+                                    <span class="client-type">Indépendant</span>
+                                </div>
+                            </td>
+                            <td>2024</td>
+                            <td>
+                                <span class="status-badge en-cours">En cours</span>
+                            </td>
+                            <td>15/01/2024</td>
+                            <td>30/06/2024</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 65%;"></div>
+                                    </div>
+                                    <span class="progress-text">65%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <button class="action-btn" title="Voir">👁</button>
+                                    <button class="action-btn" title="Modifier">✏️</button>
+                                    <button class="action-btn" title="Télécharger">⬇️</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <span class="client-name">Jean Martin</span>
+                                    <span class="client-type particulier">Particulier</span>
+                                </div>
+                            </td>
+                            <td>2024</td>
+                            <td>
+                                <span class="status-badge completee">Complétée</span>
+                            </td>
+                            <td>10/01/2024</td>
+                            <td>30/06/2024</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <span class="progress-text">100%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <button class="action-btn" title="Voir">👁</button>
+                                    <button class="action-btn" title="Modifier">✏️</button>
+                                    <button class="action-btn" title="Télécharger">⬇️</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <span class="client-name">Sophie Laurent</span>
+                                    <span class="client-type">Indépendant</span>
+                                </div>
+                            </td>
+                            <td>2024</td>
+                            <td>
+                                <span class="status-badge a-soumettre">À soumettre</span>
+                            </td>
+                            <td>20/01/2024</td>
+                            <td>30/06/2024</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 90%;"></div>
+                                    </div>
+                                    <span class="progress-text">90%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <button class="action-btn" title="Voir">👁</button>
+                                    <button class="action-btn" title="Modifier">✏️</button>
+                                    <button class="action-btn" title="Télécharger">⬇️</button>
+                                    <button class="action-btn send-btn" title="Envoyer">📧</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <span class="client-name">Pierre Durand</span>
+                                    <span class="client-type particulier">Particulier</span>
+                                </div>
+                            </td>
+                            <td>2024</td>
+                            <td>
+                                <span class="status-badge en-attente">En attente</span>
+                            </td>
+                            <td>25/01/2024</td>
+                            <td>30/06/2024</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 45%;"></div>
+                                    </div>
+                                    <span class="progress-text">45%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <button class="action-btn" title="Voir">👁</button>
+                                    <button class="action-btn" title="Modifier">✏️</button>
+                                    <button class="action-btn" title="Télécharger">⬇️</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="client-info">
+                                    <span class="client-name">Isabelle Petit</span>
+                                    <span class="client-type">Indépendant</span>
+                                </div>
+                            </td>
+                            <td>2024</td>
+                            <td>
+                                <span class="status-badge validee">Validée</span>
+                            </td>
+                            <td>05/01/2024</td>
+                            <td>30/06/2024</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <span class="progress-text">100%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-container">
+                                    <button class="action-btn" title="Voir">👁</button>
+                                    <button class="action-btn" title="Modifier">✏️</button>
+                                    <button class="action-btn" title="Télécharger">⬇️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Filter tabs functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                filterTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Filter logic would go here
+                const filterValue = this.textContent.trim();
+                console.log('Filter by:', filterValue);
+            });
+        });
+
+        // Action buttons functionality
+        const actionBtns = document.querySelectorAll('.action-btn');
+        
+        actionBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const action = this.getAttribute('title');
+                console.log('Action:', action);
+                
+                // Add your action logic here
+                if (action === 'Envoyer') {
+                    alert('Déclaration envoyée avec succès!');
+                }
+            });
+        });
+
+        // Row click functionality
+        const tableRows = document.querySelectorAll('.declarations-table tbody tr');
+        
+        tableRows.forEach(row => {
+            row.style.cursor = 'pointer';
+            row.addEventListener('click', function(e) {
+                // Don't trigger if clicking action buttons
+                if (!e.target.closest('.action-btn')) {
+                    const clientName = this.querySelector('.client-name').textContent;
+                    console.log('View details for:', clientName);
+                    // Navigate to details page
+                }
+            });
+        });
+    </script>
+</body>
+</html>

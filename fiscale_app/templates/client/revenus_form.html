@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un revenu - My Fisc</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <style>
+        .revenu-form-card {
+            max-width: 720px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 0.35rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border-radius: 0.6rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--light-bg);
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            background-color: #ffffff;
+        }
+
+        .form-group input::-webkit-outer-spin-button,
+        .form-group input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .form-group input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+        }
+
+        .button-primary {
+            border: none;
+            padding: 0.75rem 1.6rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+            filter: brightness(1.02);
+        }
+
+        .button-secondary {
+            padding: 0.75rem 1.4rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+
+        .button-secondary:hover {
+            background-color: var(--light-bg);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .alert {
+            border-radius: 0.75rem;
+            padding: 0.9rem 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-danger {
+            background-color: #FEF2F2;
+            border: 1px solid #FCA5A5;
+            color: #B91C1C;
+        }
+
+        .alert ul {
+            margin-left: 1.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .revenu-form-card {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+
+            .button-primary,
+            .button-secondary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% block content %}
+<header class="header">
+    <div class="container">
+        <div class="header-left">
+            <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}" class="back-link">← Retour à mes revenus</a>
+            <div class="header-title">
+                <div class="logo-circle">O</div>
+                <div>
+                    <h1>My Fisc</h1>
+                    <p>Client Particulier</p>
+                </div>
+            </div>
+        </div>
+        <div class="user-profile">
+            <span class="user-name">{{ client.prenom }} {{ client.nom }}</span>
+            <span class="user-role">Particulier</span>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <section class="welcome-section">
+            <h2>Ajouter un revenu</h2>
+            <p>Saisissez les informations de votre nouveau revenu.</p>
+        </section>
+
+        <section class="dashboard-section revenu-form-card">
+            {% if errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="post" class="form-grid" novalidate>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_montant">Montant</label>
+                    <input
+                        type="number"
+                        name="montant"
+                        id="id_montant"
+                        min="0"
+                        step="1"
+                        value="{{ initial.montant }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="id_annee_de_perception">Année de perception</label>
+                    <input
+                        type="number"
+                        name="annee_de_perception"
+                        id="id_annee_de_perception"
+                        min="2024"
+                        max="{% now 'Y' %}"
+                        value="{{ initial.annee_de_perception }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="id_type_revenu">Type de revenu</label>
+                    <select
+                        name="type_revenu"
+                        id="id_type_revenu"
+                        required
+                    >
+                        <option value="">-- Sélectionnez un type --</option>
+                        {% for type in type_revenus %}
+                            <option value="{{ type.pk }}" {% if initial.type_revenu|add:'0' == type.pk|stringformat:'d' %}selected{% endif %}>{{ type.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="button-primary">Enregistrer le revenu</button>
+                    <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}" class="button-secondary">Annuler</a>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+{% endblock %}
+</body>
+</html>

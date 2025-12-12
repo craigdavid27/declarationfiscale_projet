@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier des Échéances - My Fisc</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .calendar-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .calendar-nav button {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: var(--light-bg);
+            border-color: var(--primary-color);
+        }
+
+        .calendar-month {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: var(--light-bg);
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .calendar-day {
+            background: white;
+            padding: 0.75rem;
+            min-height: 100px;
+            position: relative;
+        }
+
+        .calendar-day-number {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-event {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 0.375rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .calendar-event.tva {
+            background: #FED7AA;
+            color: #9A3412;
+        }
+
+        .calendar-event.precompte {
+            background: #E9D5FF;
+            color: #6B21A8;
+        }
+
+        .calendar-event.ipp {
+            background: #BFDBFE;
+            color: #1E40AF;
+        }
+
+        .calendar-event.cotisations {
+            background: #A7F3D0;
+            color: #065F46;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .legend-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .legend-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-color.ipp {
+            background: #3B82F6;
+        }
+
+        .legend-color.tva {
+            background: #F97316;
+        }
+
+        .legend-color.precompte {
+            background: #A855F7;
+        }
+
+        .legend-color.cotisations {
+            background: #14B8A6;
+        }
+
+        .legend-text {
+            color: var(--text-dark);
+            font-size: 0.9375rem;
+        }
+
+        .echeances-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+        }
+
+        .echeances-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .echeance-item {
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .echeance-date {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .echeance-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .echeance-badge.tva {
+            background: #FED7AA;
+            color: #9A3412;
+        }
+
+        .echeance-badge.precompte {
+            background: #E9D5FF;
+            color: #6B21A8;
+        }
+
+        .echeance-badge.ipp {
+            background: #BFDBFE;
+            color: #1E40AF;
+        }
+
+        .echeance-description {
+            color: var(--text-dark);
+            font-size: 0.9375rem;
+        }
+
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <a href="comptable.html" class="back-link">← Retour</a>
+                <div class="header-title">
+                    <h1>Calendrier des Échéances</h1>
+                </div>
+            </div>
+            <div class="user-profile">
+                <span class="user-name">Marc Dupont</span>
+                <span class="user-role">Comptable</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-wrapper">
+                <!-- Calendar -->
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <span class="calendar-month">Juin 2024</span>
+                        <div class="calendar-nav">
+                            <button>‹</button>
+                            <button>›</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid">
+                        <!-- Day Headers -->
+                        <div class="calendar-day-header">Lun</div>
+                        <div class="calendar-day-header">Mar</div>
+                        <div class="calendar-day-header">Mer</div>
+                        <div class="calendar-day-header">Jeu</div>
+                        <div class="calendar-day-header">Ven</div>
+                        <div class="calendar-day-header">Sam</div>
+                        <div class="calendar-day-header">Dim</div>
+
+                        <!-- Days -->
+                        <!-- Week 1 -->
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">1</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">2</div>
+                        </div>
+
+                        <!-- Week 2 -->
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">3</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">4</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">5</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">6</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">7</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">8</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">9</div>
+                        </div>
+
+                        <!-- Week 3 -->
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">10</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">11</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">12</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">13</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">14</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">15</div>
+                            <div class="calendar-event tva">TVA</div>
+                            <div class="calendar-event tva">TVA</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">16</div>
+                        </div>
+
+                        <!-- Week 4 -->
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">17</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">18</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">19</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">20</div>
+                            <div class="calendar-event precompte">Précompte</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">21</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">22</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">23</div>
+                        </div>
+
+                        <!-- Week 5 -->
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">24</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">25</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">26</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">27</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">28</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">29</div>
+                        </div>
+                        <div class="calendar-day">
+                            <div class="calendar-day-number">30</div>
+                            <div class="calendar-event ipp">IPP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div>
+                    <!-- Legend -->
+                    <div class="legend-card">
+                        <h3 class="legend-title">Légende</h3>
+                        <div class="legend-item">
+                            <div class="legend-color ipp"></div>
+                            <span class="legend-text">Déclaration IPP</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color tva"></div>
+                            <span class="legend-text">Déclaration TVA</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color precompte"></div>
+                            <span class="legend-text">Précompte professionnel</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color cotisations"></div>
+                            <span class="legend-text">Cotisations sociales</span>
+                        </div>
+                    </div>
+
+                    <!-- Échéances du mois -->
+                    <div class="echeances-card">
+                        <h3 class="echeances-title">Échéances du mois</h3>
+                        
+                        <div class="echeance-item">
+                            <div class="echeance-date">15 juin</div>
+                            <span class="echeance-badge tva">TVA</span>
+                            <div class="echeance-description">TVA T2 - Marie Dubois</div>
+                        </div>
+
+                        <div class="echeance-item">
+                            <div class="echeance-date">15 juin</div>
+                            <span class="echeance-badge tva">TVA</span>
+                            <div class="echeance-description">TVA T2 - Sophie Laurent</div>
+                        </div>
+
+                        <div class="echeance-item">
+                            <div class="echeance-date">20 juin</div>
+                            <span class="echeance-badge precompte">Précompte</span>
+                            <div class="echeance-description">Précompte - Isabelle Petit</div>
+                        </div>
+
+                        <div class="echeance-item">
+                            <div class="echeance-date">30 juin</div>
+                            <span class="echeance-badge ipp">IPP</span>
+                            <div class="echeance-description"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation du calendrier
+        const navButtons = document.querySelectorAll('.calendar-nav button');
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Navigation clicked');
+                // Logique de navigation à implémenter
+            });
+        });
+    </script>
+</body>
+</html>

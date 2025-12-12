@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fisc - Gestion fiscale professionnelle</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>My Fisc</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Bienvenue sur My Fisc</h2>
+                <p class="hero-subtitle">Plateforme moderne de gestion fiscale pour cabinets comptables</p>
+                <p class="hero-description">Gestion fiscale simplifiée</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Espaces Section -->
+    <section id="espaces" class="espaces">
+        <div class="container">
+            <div class="espaces-grid">
+                <!-- Espace Comptables -->
+                <div class="espace-card espace-comptables" id="comptables">
+                    <div class="card-header">
+                        <div class="icon icon-comptables">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Espace Comptables</h3>
+                    </div>
+                    <p class="card-subtitle">Gestion complète des clients et déclarations</p>
+                    <ul class="features-list">
+                        <li>
+                            <span class="feature-icon">📊</span>
+                            <div>
+                                <strong>Tableau de bord complet</strong>
+                                <p>Statistiques et graphiques en temps réel</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="feature-icon">👥</span>
+                            <div>
+                                <strong>Gestion clients</strong>
+                                <p>Base de données centralisée</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="feature-icon">📋</span>
+                            <div>
+                                <strong>Suivi des déclarations</strong>
+                                <p>États et progression détaillés</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="feature-icon">📅</span>
+                            <div>
+                                <strong>Calendrier des échéances</strong>
+                                <p>Planification et alertes</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="{% url 'login' %}" class="btn btn-primary" style="text-decoration: none; display: inline-block;">Accéder à l'espace</a>
+                </div>
+
+                <!-- Espace Clients -->
+                <div class="espace-card espace-clients" id="clients">
+                    <div class="card-header">
+                        <div class="icon icon-clients">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <path d="M20 8v6M23 11h-6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="card-title">Espace Clients</h3>
+                    </div>
+                    <p class="card-subtitle">Consultez et gérez votre déclaration fiscale</p>
+                    <ul class="features-list">
+                        <li>
+                            <span class="feature-icon">👤</span>
+                            <div>
+                                <strong>Mes informations</strong>
+                                <p>Profil et coordonnées personnelles</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="feature-icon">💰</span>
+                            <div>
+                                <strong>Mes revenus</strong>
+                                <p>Déclaration des revenus simplifiée</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="feature-icon">💳</span>
+                            <div>
+                                <strong>Mes dépenses</strong>
+                                <p>Déductions et crédits d'impôts</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="feature-icon">🔍</span>
+                            <div>
+                                <strong>Suivi du dossier</strong>
+                                <p>État d'avancement en temps réel</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="{% url 'login' %}" class="btn btn-secondary" style="text-decoration: none; display: inline-block;">Accéder à mon espace</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fonctionnalités Section -->
+    <section id="fonctionnalites" class="fonctionnalites">
+        <div class="container">
+            <h2 class="section-title">Fonctionnalités</h2>
+            <div class="fonctionnalites-grid">
+                <div class="feature-card">
+                    <div class="feature-card-icon">📋</div>
+                    <h3>Déclarations</h3>
+                    <p>Gestion complète des déclarations fiscales</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">📅</div>
+                    <h3>Échéances</h3>
+                    <p>Calendrier et rappels automatiques</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">📊</div>
+                    <h3>Statistiques</h3>
+                    <p>Tableaux de bord et rapports</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-card-icon">⚡</div>
+                    <h3>Temps réel</h3>
+                    <p>Suivi en direct de vos dossiers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>My Fisc</h3>
+                    <p>Gestion fiscale professionnelle</p>
+                </div>
+                <div class="footer-info">
+                    <p>Cabinet comptable agréé en Belgique</p>
+                    <p>&copy; {% now "Y" %} My Fisc - Gestion fiscale professionnelle</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Client Particulier - My Fisc</title>
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/particulier.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    {% block content %}
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <a href="{% url 'index' %}" class="back-link">← Changer de profil</a>
+                <div class="header-title">
+                    <div class="logo-circle">O</div>
+                    <div>
+                        <h1>My Fisc</h1>
+                        <p>Client Particulier</p>
+                    </div>
+                </div>
+            </div>
+            <div class="user-profile">
+                <span class="user-name">{{client.prenom}} {{client.nom}}</span>
+                <span class="user-role">Particulier</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h2>Bienvenue, {{client.prenom}}</h2>
+                <p>Gérez votre déclaration fiscale en toute simplicité</p>
+            </section>
+
+            <!-- Tableau de bord -->
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h3>Tableau de bord</h3>
+                    <span class="status-badge">En cours</span>
+                </div>
+                <p class="section-subtitle">Vue d'ensemble de votre dossier fiscal</p>
+
+                <div class="dashboard-grid">
+                    <!-- Progress Circle -->
+                    <div class="progress-card">
+                        <div class="progress-circle-container">
+                            <svg class="progress-circle" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="54" class="progress-background"></circle>
+                                <circle cx="60" cy="60" r="54" class="progress-fill" style="stroke-dasharray: 339.3; stroke-dashoffset: 220.545;"></circle>
+                            </svg>
+                            <div class="progress-text">
+                                <span class="progress-percentage">35%</span>
+                                <span class="progress-label">Complété</span>
+                            </div>
+                        </div>
+                        <p class="progress-caption">Avancement de votre dossier</p>
+                    </div>
+
+                    <!-- Stats Cards Column -->
+                    <div class="stats-column">
+                        <!-- Completed Steps -->
+                        <div class="stat-card stat-completed">
+                            <div class="stat-header">
+                                <div class="stat-icon completed-icon">✓</div>
+                            </div>
+                            <p class="stat-number">7</p>
+                            <p class="stat-label">Étapes complétées</p>
+                            <p class="stat-detail">sur 20 au total</p>
+                        </div>
+
+                        <!-- Pending Tasks -->
+                        <div class="stat-card stat-pending">
+                            <div class="stat-header">
+                                <div class="stat-icon pending-icon">⏱</div>
+                            </div>
+                            <p class="stat-number">3</p>
+                            <p class="stat-label">Tâches en attente</p>
+                            <p class="stat-detail">à compléter</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards Column 2 -->
+                    <div class="stats-column">
+                        <!-- Fiscal Year -->
+                        <div class="stat-card stat-year">
+                            <div class="stat-header">
+                                <div class="stat-icon year-icon">📋</div>
+                            </div>
+                            <p class="stat-number">{% now 'Y' %}</p>
+                            <p class="stat-label">Année fiscale</p>
+                            <p class="stat-detail">en cours</p>
+                        </div>
+
+                        <!-- Missing Documents -->
+                        <div class="stat-card stat-documents">
+                            <div class="stat-header">
+                                <div class="stat-icon documents-icon">📥</div>
+                            </div>
+                            <p class="stat-number">5</p>
+                            <p class="stat-label">Documents manquants</p>
+                            <p class="stat-detail">à télécharger</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Cards -->
+            <section class="navigation-section">
+                <div class="nav-grid">
+                    <!-- Mon Profil -->
+                    <div class="nav-card">
+                        <div class="nav-card-header">
+                            <div class="nav-icon">👤</div>
+                            <h3>Mon Profil</h3>
+                        </div>
+                        <ul class="nav-items">
+                            <li><a href="#" class="nav-item">
+                                <span>Informations personnelles</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                            <li><a href="#" class="nav-item">
+                                <span>Coordonnées</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                            <li><a href="#" class="nav-item">
+                                <span>Informations de connexion</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                            <li><a href="#" class="nav-item">
+                                <span>Personnes à charge</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                        </ul>
+                    </div>
+                    <!-- Revenus -->
+                    <div class="nav-card">
+                        <div class="nav-card-header">
+                            <div class="nav-icon">🏢</div>
+                            <h3>Revenus</h3>
+                        </div>
+                        <ul class="nav-items">
+                            <li>
+                                <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}">
+                                <!-- <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}" class="nav-item"> -->
+                                    <span>Mes revenus</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li><a href="{% url 'clients:new_revenu' idclient=client.idclient %}">
+                                <span>Ajouter un revenu</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dépenses -->
+                    <div class="nav-card">
+                        <div class="nav-card-header">
+                            <div class="nav-icon">📊</div>
+                            <h3>Dépenses</h3>
+                        </div>
+                        <ul class="nav-items">
+                            <li><a href="{% url 'clients:mes_depenses' idclient=client.idclient %}">
+                                <span>Mes dépenses</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                            <li><a href="{% url 'clients:new_depense' idclient=client.idclient %}" class="nav-item">
+                                <span>Ajouter une dépense</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="{% static 'js/particulier.js' %}"></script>
+    {% endblock %}
+</body>
+</html>
