@@ -15,7 +15,9 @@
     <div class="clients-header">
         <button class="back-btn" onclick="window.location.href='comptable.html'">← Retour</button>
         <h1 class="page-title">Gestion des Clients</h1>
-        <button class="new-client-btn">+ Nouveau Client</button>
+        {% if poste == "Expert-comptable" %}
+            <button class="new-client-btn">+ Nouveau Client</button>
+        {% endif %}
     </div>
 
     <!-- Main Content -->
@@ -28,14 +30,14 @@
 
             <!-- Filter Tabs -->
             <div class="filter-tabs">
-                <button class="tab-btn active" data-filter="tous">Tous (6)</button>
-                <button class="tab-btn" data-filter="independants">Indépendants (3)</button>
-                <button class="tab-btn" data-filter="particuliers">Particuliers (3)</button>
+                <button class="tab-btn active" data-filter="tous">Tous ({{ total_clients }})</button>
+                <button class="tab-btn" data-filter="independants">Indépendants ({{ total_independants }})</button>
+                <button class="tab-btn" data-filter="particuliers">Particuliers ({{ total_particuliers }})</button>
             </div>
 
             <!-- Results Count -->
             <div class="results-count">
-                <p id="resultCount">6 clients trouvés</p>
+                <p id="resultCount">{{ total_clients }} clients trouvés</p>
             </div>
 
             <!-- Clients Grid -->
@@ -74,7 +76,7 @@
                             <span class="status-percentage">{{ client.progression }}%</span>
                         </div>
                         <div class="progress-bar-wrapper">
-                            <div class="progress-bar-fill" style="width: \{\{ client\.progression \}\}\%; background: #10B981;"></div>
+                            <div class="progress-bar-fill" style="width: 65%; background: #10B981;"></div>
                         </div>
                     </div>
                     <div class="client-card-footer">

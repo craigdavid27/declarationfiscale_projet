@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suivi des Déclarations - My Fisc</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <style>
         .declarations-header {
             background: white;
@@ -250,11 +251,12 @@
     </style>
 </head>
 <body>
+    {% block content %}
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-left">
-                <a href="comptable.html" class="back-link">← Retour à l'accueil</a>
+                <a href="{% url 'comptables:mon_espace' id %}" class="back-link">← Retour à l'accueil</a>
                 <div class="header-title">
                     <div class="logo-icon">💼</div>
                     <div>
@@ -264,8 +266,8 @@
                 </div>
             </div>
             <div class="user-profile">
-                <span class="user-name">Marc Dupont</span>
-                <span class="user-role">Comptable</span>
+                <span class="user-name">{{ prenom }} {{ nom }}</span>
+                <span class="user-role">{{ poste }}</span>
             </div>
         </div>
     </header>
@@ -273,13 +275,15 @@
     <!-- Declarations Header -->
     <div class="declarations-header">
         <div class="container">
-            <a href="comptable.html" class="back-link">← Retour</a>
             <h2 class="declarations-title">Suivi des Déclarations</h2>
+            {% if poste == "Expert-comptable" %}
+            <button class="new-client-btn">+ Créer une déclaration</button>
+        {% endif %}
         </div>
     </div>
 
     <!-- Filter Tabs -->
-    <div class="filter-tabs">
+    <!-- <div class="filter-tabs">
         <div class="container">
             <button class="filter-tab active">Toutes</button>
             <button class="filter-tab">Brouillon</button>
@@ -289,7 +293,7 @@
             <button class="filter-tab">Soumise</button>
             <button class="filter-tab">Complétée</button>
         </div>
-    </div>
+    </div> -->
 
     <!-- Main Content -->
     <main class="main-content">
@@ -301,25 +305,26 @@
                             <th>Client</th>
                             <th>Année</th>
                             <th>Statut</th>
-                            <th>Création</th>
+                            <th>Impôt</th>
                             <th>Échéance</th>
                             <th>Progression</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for client_declaration in declarations %}
                         <tr>
                             <td>
                                 <div class="client-info">
-                                    <span class="client-name">Marie Dubois</span>
+                                    <span class="client-name">{{ client_declaration.client.prenom }} {{ client_declaration.client.nom }}</span>
                                     <span class="client-type">Indépendant</span>
                                 </div>
                             </td>
-                            <td>2024</td>
+                            <td>{{ client_declaration.annee }}</td>
                             <td>
-                                <span class="status-badge en-cours">En cours</span>
+                                <span class="status-badge en-cours">{{ client_declaration.statut }}</span>
                             </td>
-                            <td>15/01/2024</td>
+                            <td>{{ client_declaration.type_impot.denomination }}</td>
                             <td>30/06/2024</td>
                             <td>
                                 <div class="progress-container">
@@ -337,127 +342,7 @@
                                 </div>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td>
-                                <div class="client-info">
-                                    <span class="client-name">Jean Martin</span>
-                                    <span class="client-type particulier">Particulier</span>
-                                </div>
-                            </td>
-                            <td>2024</td>
-                            <td>
-                                <span class="status-badge completee">Complétée</span>
-                            </td>
-                            <td>10/01/2024</td>
-                            <td>30/06/2024</td>
-                            <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 100%;"></div>
-                                    </div>
-                                    <span class="progress-text">100%</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-container">
-                                    <button class="action-btn" title="Voir">👁</button>
-                                    <button class="action-btn" title="Modifier">✏️</button>
-                                    <button class="action-btn" title="Télécharger">⬇️</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="client-info">
-                                    <span class="client-name">Sophie Laurent</span>
-                                    <span class="client-type">Indépendant</span>
-                                </div>
-                            </td>
-                            <td>2024</td>
-                            <td>
-                                <span class="status-badge a-soumettre">À soumettre</span>
-                            </td>
-                            <td>20/01/2024</td>
-                            <td>30/06/2024</td>
-                            <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 90%;"></div>
-                                    </div>
-                                    <span class="progress-text">90%</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-container">
-                                    <button class="action-btn" title="Voir">👁</button>
-                                    <button class="action-btn" title="Modifier">✏️</button>
-                                    <button class="action-btn" title="Télécharger">⬇️</button>
-                                    <button class="action-btn send-btn" title="Envoyer">📧</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="client-info">
-                                    <span class="client-name">Pierre Durand</span>
-                                    <span class="client-type particulier">Particulier</span>
-                                </div>
-                            </td>
-                            <td>2024</td>
-                            <td>
-                                <span class="status-badge en-attente">En attente</span>
-                            </td>
-                            <td>25/01/2024</td>
-                            <td>30/06/2024</td>
-                            <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 45%;"></div>
-                                    </div>
-                                    <span class="progress-text">45%</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-container">
-                                    <button class="action-btn" title="Voir">👁</button>
-                                    <button class="action-btn" title="Modifier">✏️</button>
-                                    <button class="action-btn" title="Télécharger">⬇️</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="client-info">
-                                    <span class="client-name">Isabelle Petit</span>
-                                    <span class="client-type">Indépendant</span>
-                                </div>
-                            </td>
-                            <td>2024</td>
-                            <td>
-                                <span class="status-badge validee">Validée</span>
-                            </td>
-                            <td>05/01/2024</td>
-                            <td>30/06/2024</td>
-                            <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 100%;"></div>
-                                    </div>
-                                    <span class="progress-text">100%</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="actions-container">
-                                    <button class="action-btn" title="Voir">👁</button>
-                                    <button class="action-btn" title="Modifier">✏️</button>
-                                    <button class="action-btn" title="Télécharger">⬇️</button>
-                                </div>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -513,5 +398,6 @@
             });
         });
     </script>
+    {% endblock %}
 </body>
 </html>

@@ -157,7 +157,7 @@
                         </div>
                         <ul class="nav-items">
                             <li>
-                                <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}">
+                                <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}" class="nav-item">
                                 <!-- <a href="{% url 'clients:mes_revenus' idclient=client.idclient %}" class="nav-item"> -->
                                     <span>Mes revenus</span>
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -165,7 +165,7 @@
                                     </svg>
                                 </a>
                             </li>
-                            <li><a href="{% url 'clients:new_revenu' idclient=client.idclient %}">
+                            <li><a href="{% url 'clients:new_revenu' idclient=client.idclient %}" class="nav-item">
                                 <span>Ajouter un revenu</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
@@ -181,7 +181,7 @@
                             <h3>Dépenses</h3>
                         </div>
                         <ul class="nav-items">
-                            <li><a href="{% url 'clients:mes_depenses' idclient=client.idclient %}">
+                            <li><a href="{% url 'clients:mes_depenses' idclient=client.idclient %}" class="nav-item">
                                 <span>Mes dépenses</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
@@ -189,6 +189,22 @@
                             </a></li>
                             <li><a href="{% url 'clients:new_depense' idclient=client.idclient %}" class="nav-item">
                                 <span>Ajouter une dépense</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Mes déclarations fiscales -->
+                    <div class="nav-card">
+                        <div class="nav-card-header">
+                            <div class="nav-icon">📊</div>
+                            <h3>Mes déclarations fiscales</h3>
+                        </div> 
+                        <ul class="nav-items">
+                            <li><a href="{% url 'activites:mes_declarations' idclient=client.idclient %}" class="nav-item">
+                                <span>Voir mes déclarations</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="9 18 15 12 9 6"></polyline>
                                 </svg>

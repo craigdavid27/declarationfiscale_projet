@@ -9,8 +9,7 @@ def mon_espace_view(request, idmembre):
 		return render(request, "error.html", {"message": "Accès non autorisé."})
 
 	# Fetch member's name from session
-	nom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('nom', flat=True).first()
-	prenom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('prenom', flat=True).first()
+	membre = MembreCabinet.objects.filter(idmembre=idmembre).first()
 	# Get total number of clients assigned to this member
 	declarations_ids = AttributionDeclarationFiscaleAMembre.objects.filter(
 		membre_cabinet_id=idmembre
@@ -109,8 +108,9 @@ def mon_espace_view(request, idmembre):
 
 	context = {
 		"id": idmembre,
-		"nom" : nom,
-		"prenom": prenom,
+		"nom" : membre.nom,
+		"poste": membre.poste.poste,
+		"prenom": membre.prenom,
 		"total_clients": total_clients,
 		"declarations_en_cours": declarations_en_cours,
 		"declarations_a_soumettre": declarations_a_soumettre,
@@ -126,12 +126,21 @@ def gestion_clients_view(request, idmembre):
 		return render(request, "error.html", {"message": "Accès non autorisé."})
 	
 	# Fetch member's name from session
-	nom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('nom', flat=True).first()
-	prenom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('prenom', flat=True).first()
+	membre = MembreCabinet.objects.filter(idmembre=idmembre).first()
+
+	clients_liste = Client.objects.filter(
+		declarationfiscale__attributiondeclarationfiscaleamembre__membre_cabinet_id=idmembre
+	).distinct()
 	
 	context = {
-		"nom" : nom,
-		"prenom": prenom,
+		"id": idmembre,
+		"nom" : membre.nom,
+		"prenom": membre.prenom,
+		"poste": membre.poste.poste,
+		"total_clients": clients_liste.count(),
+		"total_independants": Independant.objects.filter(client_idclient__in=clients_liste).count(),
+		"total_particuliers": Particulier.objects.filter(client__in=clients_liste).count(),
+		"clients": clients_liste,
 	}
 	return render(request, "comptable/gestion_clients.html", context)
 
@@ -141,12 +150,19 @@ def suivi_declaration_view(request, idmembre):
 		return render(request, "error.html", {"message": "Accès non autorisé."})
 	
 	# Fetch member's name from session
-	nom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('nom', flat=True).first()
-	prenom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('prenom', flat=True).first()
+	membre = MembreCabinet.objects.filter(idmembre=idmembre).first()
 	
+	#récupérer toutes les déclarations fiscales associées à ce membre ainsi les données des clients associés
+	declarations_ids = AttributionDeclarationFiscaleAMembre.objects.filter(
+		membre_cabinet_id=idmembre
+	).values_list('declaration_fiscale_id', flat=True)
+
 	context = {
-		"nom" : nom,
-		"prenom": prenom,
+		"nom" : membre.nom,
+		"prenom": membre.prenom,
+		"id": idmembre,
+		"poste": membre.poste.poste,
+		"declarations": DeclarationFiscale.objects.filter(iddeclaration_fiscale__in=declarations_ids),
 	}
 	return render(request, "comptable/suivi_declarations.html", context)
 
@@ -156,11 +172,12 @@ def calendrier_view(request, idmembre):
 		return render(request, "error.html", {"message": "Accès non autorisé."})
 	
 	# Fetch member's name from session
-	nom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('nom', flat=True).first()
-	prenom = MembreCabinet.objects.filter(idmembre=idmembre).values_list('prenom', flat=True).first()
+	membre = MembreCabinet.objects.filter(idmembre=idmembre).first()
 	
 	context = {
-		"nom" : nom,
-		"prenom": prenom,
+		"nom" : membre.nom,
+		"prenom": membre.prenom,
+		"id": idmembre,
+		"poste": membre.poste.poste,
 	}
 	return render(request, "comptable/calendrier_echeances.html", context)

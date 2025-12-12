@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendrier des Échéances - My Fisc</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    {% csrf_token %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
     <style>
         .calendar-container {
             background: white;
@@ -239,18 +241,19 @@
     </style>
 </head>
 <body>
+    {% block content %}
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-left">
-                <a href="comptable.html" class="back-link">← Retour</a>
+                <a href="{% url 'comptables:mon_espace' id %}" class="back-link">← Retour</a>
                 <div class="header-title">
                     <h1>Calendrier des Échéances</h1>
                 </div>
             </div>
             <div class="user-profile">
-                <span class="user-name">Marc Dupont</span>
-                <span class="user-role">Comptable</span>
+                <span class="user-name">{{ nom }} {{ prenom }}</span>
+                <span class="user-role">{{ poste }}</span>
             </div>
         </div>
     </header>
@@ -457,5 +460,6 @@
             });
         });
     </script>
+    {% endblock %}
 </body>
 </html>
